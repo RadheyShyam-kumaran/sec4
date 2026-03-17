@@ -1,23 +1,30 @@
 name: Events Demo 1
-on: 
-  pull_request:
-    types : opened
-  workflow_dispatch: 
+on:  # at what event it should trigger the workflow
+  pull_request: # when the pull - request is open  and for that particular branch 
+    types : opened # pull - request should of this type and branch 
+    branches :
+      - main
 
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Output event data
+  workflow_dispatch: #  when we want to trigger then only it will trigger
+  push :
+    branches: # only when push happens in below branch
+      - main
+      - 'm*'
+    paths: 
+      - '.github/workflows/*' #only if changes happe in this file this will trigger 
+jobs: # these are task
+  deploy: # these are name of the task
+    runs-on: ubuntu-latest # in which it runs 
+    steps: # step for the action or task
+      - name: Output event data # first  we 
         run: echo "${{ toJSON(github.event) }}"
-      - name: Get code
-        uses: actions/checkout@v3
-      - name: Install dependencies
+      - name: Get code # here we getting the code to actions 
+        uses: actions/checkout@v3 
+      - name: Install dependencies # then we dowloading the dependices
         run: npm ci
-      - name: Test code
+      - name: Test code # here we are testing the code 
         run: npm run test
-      - name: Build code
+      - name: Build code # building it 
         run: npm run build
-      - name: Deploy project
+      - name: Deploy project # deploying 
         run: echo "Deploying..."
